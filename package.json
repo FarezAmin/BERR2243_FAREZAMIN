@@ -1,0 +1,23 @@
+{
+  "name": "berr-2243_database-system",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000B\u0000E\u0000R\u0000R\u00002\u00002\u00004\u00003\u0000_\u0000F\u0000A\u0000R\u0000E\u0000Z\u0000A\u0000M\u0000I\u0000N\u0000\r\u0000 \u0000E\u0000x\u0000e\u0000r\u0000c\u0000i\u0000s\u0000e\u0000 \u00001\u0000 \u0000W\u0000e\u0000e\u0000k\u0000 \u00001\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "start": "run index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FarezAmin/BERR2243_FAREZAMIN.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FarezAmin/BERR2243_FAREZAMIN/issues"
+  },
+  "homepage": "https://github.com/FarezAmin/BERR2243_FAREZAMIN#readme",
+  "dependencies": {
+    "mongodb": "^6.15.0"
+  }
+}
