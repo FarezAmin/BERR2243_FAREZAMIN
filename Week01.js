@@ -1,7 +1,7 @@
 const { MongoClient } = require('mongodb');
 
 async function main() {
-    const uri = "mongodb+srv://b122310574:IpN3gw8Wa5hPxWRA@cluster0.7crxdqp.mongodb.net/"; // Replace with your MongoDB connection string
+    const uri = "mongodb+srv://b122310574:<db_password>@cluster0.7crxdqp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"; // Replace with your MongoDB connection string
     const client = new MongoClient(uri);
     
     try {
@@ -15,7 +15,7 @@ async function main() {
         console.log("Document inserted");
 
         const result = await collection.findOne({ name: "Alice" });
-        console.log("Query result:", result);
+        console.log("Query result:", result);git
     } catch (err) {
         console.error("Error connecting to MongoDB:", err);
     }
