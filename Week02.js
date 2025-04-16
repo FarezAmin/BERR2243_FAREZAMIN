@@ -13,31 +13,28 @@ const drivers = [
         vehicleType : "SUV",
         isAvailable : false,
         rating : 4.5
-    },
-    {
-        name : "Bob Johnson",
-        vehicleType : "Truck",
-        isAvailable : true,
-        rating : 4.2
-    },
-    {
-        name : "Charlie Brown",
-        vehicleType : "Van",
-        isAvailable : false,
-        rating : 4.9
-    },
-    {
-        name : "Eve Davis",
-        vehicleType : "Convertible",
-        isAvailable : true,
-        rating : 4.7
     }
 ];
 
 console.log(drivers);
 
+const newDriver = {
+    name : "Muhaimin Azeem",
+    vehicleType : "Truck",
+    isAvailable : true,
+    rating : 4.9
+};
+
+drivers.push(newDriver);
+console.log(drivers);
+
 
 async function main () {
+
+    const uri = "mongodb+srv://b122310574:<FdgDob0HZZVNvJ6O>@cluster0.7crxdqp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"; // Replace with your MongoDB connection string
+    const client = new MongoClient(uri);
+
+
     try {
         await client.connect();
         const db = client.db("testDB");
