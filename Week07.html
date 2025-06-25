@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Maxim Admin Analytics</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #fffef0;
+      color: #000;
+    }
+
+    h1 {
+      color: #d97706;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section {
+      margin-top: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background: #fffbeb;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+    }
+
+    th {
+      background: #fde68a;
+      font-weight: 600;
+      color: #000;
+    }
+
+    tr:nth-child(even) {
+      background: #fff9c4;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .icon {
+      color: #facc15;
+    }
+  </style>
+</head>
+<body>
+
+  <h1><i class="fas fa-chart-line icon"></i> Maxim Admin Analytics</h1>
+
+  <div class="section">
+    <h2>📊 Overview</h2>
+    <ul id="totals"></ul>
+  </div>
+
+  <div class="section">
+    <h2>👥 All Customers</h2>
+    <table>
+      <thead><tr><th>Name</th><th>Email</th></tr></thead>
+      <tbody id="customerTable"></tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>🚖 All Drivers</h2>
+    <table>
+      <thead><tr><th>Name</th><th>Email</th><th>Vehicle</th><th>Plate</th><th>Status</th><th>Earnings (RM)</th></tr></thead>
+      <tbody id="driverTable"></tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>🚕 All Rides</h2>
+    <table>
+      <thead><tr><th>Pickup</th><th>Destination</th><th>Driver ID</th><th>Passenger ID</th><th>Status</th><th>Fare (RM)</th></tr></thead>
+      <tbody id="rideTable"></tbody>
+    </table>
+  </div>
+
+<script>
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODViMDQ1MWI3NjExMjhjOWU0YWQ4OGYiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTA4Nzc3MzUsImV4cCI6MTc1MDg4MTMzNX0.cXlZo19ZEeRQtmby5j7G0VGXBRC9ac2ujYcbzT9Pm14'; // Replace with your admin JWT token
+
+fetch("http://localhost:3000/admin/analytics", {
+  headers: { 'Authorization': 'Bearer ' + token }
+})
+.then(res => res.json())
+.then(data => {
+  // Overview
+  document.getElementById("totals").innerHTML = `
+    <li>Total Customers: ${data.totalCustomers}</li>
+    <li>Total Drivers: ${data.totalDrivers}</li>
+    <li>Total Rides: ${data.totalRides}</li>
+  `;
+
+  // Customers
+  const customerBody = document.getElementById("customerTable");
+  data.allCustomers.forEach(c => {
+    customerBody.innerHTML += `<tr><td>${c.name}</td><td>${c.email}</td></tr>`;
+  });
+
+  // Drivers
+  const driverBody = document.getElementById("driverTable");
+  data.allDrivers.forEach(d => {
+    driverBody.innerHTML += `<tr><td>${d.name}</td><td>${d.email}</td><td>${d.vehicle}</td><td>${d.licensePlate}</td><td>${d.status}</td><td>${d.earnings}</td></tr>`;
+  });
+
+  // Rides
+  const rideBody = document.getElementById("rideTable");
+  data.allRides.forEach(r => {
+    rideBody.innerHTML += `<tr><td>${r.pickup}</td><td>${r.destination}</td><td>${r.driver}</td><td>${r.passenger}</td><td>${r.status}</td><td>${r.fare}</td></tr>`;
+  });
+})
+.catch(err => {
+  alert("Failed to load dashboard. Check server and token.");
+  console.error(err);
+});
+</script>
+
+</body>
+</html>
