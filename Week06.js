@@ -99,13 +99,13 @@ app.post("/customers/register", async (req, res) => {
 
 // Register Driver
 app.post("/drivers/register", async (req, res) => {
-    const { name, email, password, licensePlate } = req.body;
-    if (!name || !email || !password || !licensePlate)
+    const { name, email, password, vehicle, licensePlate } = req.body;
+    if (!name || !email || !password || !vehicle || !licensePlate)
         return res.status(400).json({ error: "Missing fields" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const driver = {
-        name, email, password: hashedPassword, licensePlate,
+        name, email, password: hashedPassword, vehicle, licensePlate,
         role: "driver", status: "unavailable", earnings: 0
     };
 
@@ -248,25 +248,62 @@ app.post("/auth/login", async (req, res) => {
 =================================*/
 
 app.post("/rides", authenticate, authorize(["customer"]), async (req, res) => {
-    const { pickup, destination, driver, vehicle, passenger, status } = req.body;
-    if (!pickup || !destination || !driver || !vehicle || !passenger || !status)
-        return res.status(400).json({ error: "Missing ride fields." });
+    // 🧪 Add this log to inspect incoming request body
+    console.log("📦 Incoming /rides request body:", req.body);
 
-    const newRide = { pickup, destination, driver, vehicle, passenger, status };
+    const { pickup, destination, driver, passenger, status } = req.body;
+
+    // 🔒 Still validate after logging
+    if (!pickup || !destination || !driver || !passenger || !status) {
+        console.log("❌ Missing field in ride creation request");
+        return res.status(400).json({ error: "Missing ride fields." });
+    }
+
+    const newRide = { pickup, destination, driver, passenger, status };
 
     try {
         const result = await db.collection("rides").insertOne(newRide);
         res.status(201).json({ insertedId: result.insertedId });
     } catch (error) {
+        console.error("❗ Error inserting ride:", error);
         res.status(500).json({ error: "Failed to create ride" });
     }
 });
 
+
 app.get("/rides", authenticate, authorize(["admin", "driver", "customer"]), async (req, res) => {
     try {
-        const rides = await db.collection("rides").find().toArray();
-        res.status(200).json(rides);
+        let query = {};
+
+        if (req.user.role === "customer") {
+            // Only return rides where the user is the passenger
+            query = { passenger: req.user.userId };
+        }
+
+        // Fetch rides
+        const rides = await db.collection("rides").find(query).toArray();
+
+        // Add vehicle info to each ride by fetching the driver's data
+        const enrichedRides = await Promise.all(rides.map(async (ride) => {
+        try {
+        const driverObj = await db.collection("drivers").findOne({ _id: new ObjectId(ride.driver) });
+        if (driverObj) {
+            ride.driverName = driverObj.name;
+            ride.driverVehicle = driverObj.vehicle; // ✅ This line
+            ride.driverPlate = driverObj.licensePlate;
+        } else {
+            ride.driverVehicle = "Unknown";
+        }
+        } catch (err) {
+            ride.driverVehicle = "Error fetching vehicle";
+        }
+        return ride;
+    }));
+
+
+        res.status(200).json(enrichedRides);
     } catch (error) {
+        console.error("Failed to fetch rides:", error);
         res.status(500).json({ error: "Failed to fetch rides" });
     }
 });
