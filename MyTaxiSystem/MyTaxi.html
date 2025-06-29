@@ -1,0 +1,901 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>MyTaxi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+  .logo-text {
+    font-size: 48px;
+    font-weight: 600;
+    margin: 0;
+    color: #000;
+  }
+
+      body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    color: #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    background-color: #FFDD00;
+    background-image: repeating-linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.05) 0px,
+      rgba(0, 0, 0, 0.05) 20px,
+      transparent 20px,
+      transparent 40px
+    );
+    background-repeat: repeat;
+    background-size: auto;
+  }
+      header {
+  width: 100%;
+  background-color: #FFDD00;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  z-index: 10;
+}
+
+.mytaxi-banner {
+  
+  background: #fff;
+  padding: 40px 30px;         /* ⬅️ Less padding = more compact */
+  margin: 0 auto;
+  border-radius: 40px;
+  width: fit-content;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  margin-top: -40px;           /* ⬆️ Bring it up */
+  margin-bottom: 60px;        /* ⬇️ Leave room for nav buttons */
+}
+
+.mytaxi-banner h1 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 80px;            /* ⬇️ Was 100px — now more viewable */
+  font-weight: 800;
+  margin: 0;
+  color: #000;
+}
+
+.mytaxi-banner h1 span {
+  background: #000;
+  color: #FFDD00;
+  padding: 10px 30px;
+  border-radius: 20px;
+  margin-left: 12px;
+}
+
+      nav a {
+  font-size: 24px;             /* 💬 Bigger font */
+  font-weight: 700;
+  color: #000;
+  text-decoration: none;
+  padding: 16px 32px;          /* 🔲 Bigger button area */
+  border-radius: 30px;
+  background-color: #fff;      /* Make it look like a real button */
+  border: 2px solid #000;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  
+}
+      nav {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      nav a:hover {
+        background-color: #000;
+        color: #FFDD00;
+      }
+
+      section {
+  display: none;
+  background-color: #fff;
+  width: 90%;
+  max-width: 1000px;        /* 🧱 Wider */
+  min-height: 500px;         /* 🔲 Taller */
+  margin: 40px auto;         /* More vertical spacing */
+  padding: 40px 50px;        /* More inner spacing */
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+}
+
+      .active {
+        display: block;
+      }
+
+      h2 {
+  font-size: 42px;           /* 🚀 Bigger title */
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 30px;
+  color: #000;
+  letter-spacing: 0.5px;
+  text-transform: uppercase; /* Optional: Bold caps look */
+  
+}
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      input, select, button {
+        padding: 14px;
+        border-radius: 12px;
+        border: 2px solid #000;
+        font-size: 16px;
+        font-family: 'Poppins', sans-serif;
+      }
+
+      button {
+        background-color: #000;
+        color: #FFDD00;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      button:hover {
+        background-color: #FFDD00;
+        color: #000;
+        border: 2px solid #000;
+      }
+
+      #rideResults {
+        margin-top: 20px;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      @media (max-width: 550px) {
+        nav {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        nav a {
+          margin-bottom: 10px;
+        }
+
+        section {
+          margin: 10px;
+          padding: 20px;
+        }
+      }
+
+#cabEmoji {
+  animation: cabMove 1s infinite linear;
+}
+
+.title-box {
+  background: #fff;
+  padding: 8px 20px;
+  border-radius: 20px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  display: inline-block;
+}
+
+header {
+  width: 100%;
+  height: 120px;
+  background-color: #FFDD00;
+  overflow: hidden;
+  position: relative;
+}
+
+.road-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    to right,
+    #444 0px,
+    #444 30px,
+    #fff 30px,
+    #fff 50px,
+    #444 50px,
+    #444 90px
+  );
+  overflow: hidden;
+}
+
+/* Emoji Decorations */
+.road-decor {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.landmark {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 60px; /* Bigger than cabs */
+}
+
+/* 🏫 School (far left) */
+.landmark.far-left {
+  left: 10px;
+}
+
+/* 🏭 Industry (left of title) */
+.landmark.left-of-title {
+  right: calc(50% + 180px); /* mirrors right-of-title */
+}
+
+/* 🏬 Mall (right of title) */
+.landmark.right-of-title {
+  left: calc(50% + 180px);
+}
+
+/* 🚏 Bus Station (far right) */
+.landmark.far-right {
+  right: 10px;
+}
+
+/* Base cab style */
+.cab-to-school,
+.cab-to-industry,
+.cab-to-mall,
+.cab-to-bus {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 42px;
+  white-space: nowrap;
+  z-index: 1;
+}
+
+/* 🏭 to 🏫 — cab starts between them, goes left */
+.cab-to-school {
+  left: 23%;
+  animation: toSchool 3.5s linear infinite;
+}
+/* 🏭 cab from same spot, goes right */
+.cab-to-industry {
+  left: 27%;
+  animation: toIndustry 3.5s linear infinite;
+}
+
+/* 🏬 to 🚏 — cab starts between them, goes right */
+.cab-to-bus {
+  left: 77%;
+  animation: toBus 3.5s linear infinite;
+}
+
+/* 🏬 cab from same spot, goes left */
+.cab-to-mall {
+  left: 73%;
+  animation: toMall 3.5s linear infinite;
+}
+
+/* Animations for each cab */
+@keyframes toSchool {
+  0% { transform: translateX(0%) translateY(-50%); }
+  100% { transform: translateX(-300%) translateY(-50%); }
+}
+
+@keyframes toIndustry {
+  0% { transform: translateX(0%) translateY(-50%); }
+  100% { transform: translateX(100%) translateY(-50%); }
+}
+
+@keyframes toMall {
+  0% { transform: translateX(0%) translateY(-50%); }
+  100% { transform: translateX(-100%) translateY(-50%); }
+}
+
+@keyframes toBus {
+  0% { transform: translateX(0%) translateY(-50%); }
+  100% { transform: translateX(300%) translateY(-50%); }
+}
+
+.landmark.far-left {
+  left: 10px;
+}
+.landmark.left-of-title {
+  right: calc(50% + 180px);
+}
+.landmark.right-of-title {
+  left: calc(50% + 180px);
+}
+.landmark.far-right {
+  right: 10px;
+}
+
+/* 👑 MyTaxi title */
+.logo-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 48px;
+  font-weight: 600;
+  z-index: 2;
+  margin: 0;
+}
+
+.title-box {
+  background: #fff;
+  padding: 8px 20px;
+  border-radius: 20px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.15);
+  display: inline-block;
+}
+
+.highlight {
+  background: #000;
+  color: #FFDD00;
+  padding: 6px 16px;
+  border-radius: 12px;
+}
+
+footer.affiliate-bar {
+  width: 100%;
+  padding: 28px 0;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  color: #000;
+  position: relative;
+  z-index: 1;
+}
+
+footer.affiliate-bar img {
+  vertical-align: middle;
+  margin-left: 16px;
+  height: 90px; /* 🚀 Increased height */
+  filter: drop-shadow(0 0 4px rgba(0,0,0,0.3)); /* 💥 Makes it pop */
+  transition: transform 0.3s ease;
+}
+
+    </style>
+  </head>
+  <body>
+    <header>
+  <div class="road-container">
+
+    <!-- Emoji landmarks -->
+    <div class="road-decor">
+      <span class="landmark far-left">🏫</span>
+      <span class="landmark left-of-title">🏭</span>
+      <span class="landmark right-of-title">🏬</span>
+      <span class="landmark far-right">🚏</span>
+    </div>
+
+    <!-- Cabs moving from midpoint to each landmark -->
+    <div class="cab-to-school">🚕</div>
+    <div class="cab-to-industry">🚕</div>
+    <div class="cab-to-mall">🚕</div>
+    <div class="cab-to-bus">🚕</div>
+
+    <!-- MyTaxi title -->
+    <div class="mytaxi-banner">
+    <h1>
+      My<span>Taxi</span>
+    </h1>
+  </div>
+</header>
+    <nav>
+      <a href="#" onclick="showSection('login')">Login</a>
+      <a href="#" onclick="showSection('register')">Register</a>
+    </nav>
+
+    <!-- Login -->
+    <section id="login">
+      <h2>Login</h2>
+      <form onsubmit="login(event)">
+        <input type="email" id="loginEmail" placeholder="Email" required>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <button type="submit">Login</button>
+      </form>
+    </section>
+
+    <!-- Register -->
+    <section id="register">
+      <h2>Register</h2>
+      <form onsubmit="register(event)">
+        <input type="text" id="regName" placeholder="Name" required>
+        <input type="email" id="regEmail" placeholder="Email" required>
+        <input type="password" id="regPassword" placeholder="Password" required>
+        <select id="regRole" onchange="toggleDriverFields()">
+          <option value="customer">Customer</option>
+          <option value="driver">Driver</option>
+          <option value="admin">Admin</option>
+        </select>
+        <div id="driverFields" class="hidden">
+          <input type="text" id="regVehicle" placeholder="Vehicle Type">
+          <input type="text" id="regPlate" placeholder="License Plate">
+        </div>
+        <button type="submit">Register</button>
+      </form>
+    </section>
+
+    <!-- Customer Dashboard -->
+  <section id="customer">
+    <h2>Customer Dashboard</h2>
+    <form onsubmit="createRide(event)">
+      <select id="pickup" required onchange="updateFare()">
+        <option value="">Select Pickup</option>
+        <option value="UTeM Kampus Induk">UTeM Kampus Induk</option>
+        <option value="Mydin MITC">Mydin MITC</option>
+        <option value="Melaka Sentral">Melaka Sentral</option>
+        <option value="UTeM Kampus Teknologi">UTeM Kampus Teknologi</option>
+      </select>
+
+      <select id="destination" required onchange="updateFare()">
+        <option value="">Select Destination</option>
+        <option value="UTeM Kampus Induk">UTeM Kampus Induk</option>
+        <option value="Mydin MITC">Mydin MITC</option>
+        <option value="Melaka Sentral">Melaka Sentral</option>
+        <option value="UTeM Kampus Teknologi">UTeM Kampus Teknologi</option>
+      </select>
+
+      <select id="driverSelect" required>
+    <option value="">Select Driver</option>
+  </select>
+
+      <div id="fareDisplay" style="display:none; font-weight:bold; font-size:18px; margin:10px 0;">
+        Fare: RM <span id="fareAmount">0</span>
+      </div>
+
+      <button type="submit">Book Ride</button>
+      <div id="rideLoading" style="margin-top: 15px; font-weight: bold; display: none;">
+  <span id="loadingText">Creating ride...</span> 
+  <span id="cabEmoji" style="display: inline-block;">🚕</span>
+</div>
+    </form>
+
+    <button onclick="showSection('rides')">View My Rides</button>
+  </section>
+
+    <!-- Driver Dashboard -->
+    <section id="driver">
+  <h2>Driver Dashboard</h2>
+  <button onclick="showSection('rides')">View Available Rides</button>
+  <button onclick="showSection('earnings')">View Earnings</button>
+  <div id="earningsDisplay" style="margin-top: 15px; font-weight: bold; display: none;"></div>
+</section>
+
+  <!-- Admin Dashboard -->
+<section id="admin">
+  <h2>Admin Dashboard</h2>
+
+  <div id="adminMainMenu">
+    <button onclick="showDeleteCustomer()">Delete Customer</button>
+    <button onclick="fetchAnalytics()">View Analytics</button>
+  </div>
+
+  <!-- Delete Customer Section -->
+  <div id="deleteCustomerSection" class="hidden">
+    <select id="deleteCustomerId" style="margin-bottom:10px;">
+  <option value="">Select a customer to delete</option>
+</select>
+    <button onclick="deleteCustomer()">Delete Customer</button>
+    <button onclick="goBackToDashboard()" style="margin-top: 10px;">Go Back</button>
+  </div>
+
+  <!-- Analytics Section -->
+  <div id="analyticsSection" class="hidden">
+    <div id="analyticsResult" style="margin-top: 20px;"></div>
+    <button onclick="goBackToDashboard()" style="margin-top: 10px;">Go Back</button>
+  </div>
+</section>
+
+    <!-- Rides -->
+  <section id="rides">
+    <h2>Rides</h2>
+    <div id="rideResults">Loading...</div>
+    <button onclick="goBackToDashboard()" style="margin-top: 20px;">Go Back</button>
+  </section>
+    
+  <!-- Driver Earnings Section -->
+<section id="earnings">
+  <h2>My Earnings</h2>
+  <div id="earningsList">Loading...</div>
+  <button onclick="goBackToDashboard()" style="margin-top: 20px;">Go Back</button>
+</section>
+
+  <script>
+  let userRole = "";
+  let userId = "";
+
+  function goBackToDashboard() {
+  // Always go back to the correct dashboard section
+  showSection(userRole);
+
+  // Only reset admin-related UI if current user is admin
+  if (userRole === "admin") {
+    document.getElementById("deleteCustomerSection")?.classList.add("hidden");
+    document.getElementById("analyticsSection")?.classList.add("hidden");
+    document.getElementById("adminMainMenu")?.classList.remove("hidden");
+    document.getElementById("analyticsResult").innerHTML = "";
+  }
+}
+
+async function showDeleteCustomer() {
+  document.getElementById("adminMainMenu").classList.add("hidden");
+  document.getElementById("analyticsSection").classList.add("hidden");
+  document.getElementById("deleteCustomerSection").classList.remove("hidden");
+
+  const token = localStorage.getItem("token");
+  const res = await fetch("http://localhost:3000/admin/analytics", {
+    headers: { "Authorization": "Bearer " + token }
+  });
+
+  const data = await res.json();
+  const dropdown = document.getElementById("deleteCustomerId");
+
+  if (res.ok && Array.isArray(data.allCustomers)) {
+    dropdown.innerHTML = '<option value="">Select a customer to delete</option>';
+    data.allCustomers.forEach(c => {
+      const option = document.createElement("option");
+      option.value = c._id;
+      option.textContent = `${c.name} (${c.email})`;
+      dropdown.appendChild(option);
+    });
+  } else {
+    dropdown.innerHTML = '<option value="">Failed to load customers</option>';
+  }
+}
+
+  function showSection(id) {
+    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if (id === "rides") fetchRides();
+    if (id === "customer") loadDrivers();
+    if (id === "earnings") fetchDriverEarnings();
+
+  }
+
+  const fareChart = {
+    "UTeM Kampus Induk->Mydin MITC": 10,
+    "Mydin MITC->UTeM Kampus Induk": 10,
+    "UTeM Kampus Induk->Melaka Sentral": 20,
+    "Melaka Sentral->UTeM Kampus Induk": 20,
+    "UTeM Kampus Induk->UTeM Kampus Teknologi": 10,
+    "UTeM Kampus Teknologi->UTeM Kampus Induk": 10
+  };
+
+  function updateFare() {
+    const pickup = document.getElementById("pickup").value;
+    const destination = document.getElementById("destination").value;
+    const fareDisplay = document.getElementById("fareDisplay");
+
+    if (!pickup || !destination || pickup === destination) {
+      fareDisplay.style.display = "none";
+      return;
+    }
+
+    const route = `${pickup}->${destination}`;
+    if (fareChart[route]) {
+      fareDisplay.style.display = "block";
+      fareDisplay.innerHTML = `Fare: RM <span id="fareAmount">${fareChart[route]}</span>`;
+    } else {
+      fareDisplay.style.display = "block";
+      fareDisplay.innerHTML = `<span style="color:red;font-weight:bold;">Route not available</span>`;
+    }
+  }
+
+  function toggleDriverFields() {
+    const role = document.getElementById('regRole').value;
+    document.getElementById('driverFields').classList.toggle('hidden', role !== 'driver');
+  }
+
+  async function login(e) {
+    e.preventDefault();
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+
+    const res = await fetch("http://localhost:3000/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      localStorage.setItem("token", data.token);
+      const payload = JSON.parse(atob(data.token.split('.')[1]));
+      userRole = payload.role;
+      userId = payload.userId;
+      showSection(userRole);
+    } else {
+      alert(data.error || "Login failed");
+    }
+  }
+
+  async function register(e) {
+    e.preventDefault();
+    const name = document.getElementById("regName").value;
+    const email = document.getElementById("regEmail").value;
+    const password = document.getElementById("regPassword").value;
+    const role = document.getElementById("regRole").value;
+
+    let url = `http://localhost:3000/${role}s/register`;
+    let body = { name, email, password };
+
+    if (role === "driver") {
+      body.vehicle = document.getElementById("regVehicle").value;
+      body.licensePlate = document.getElementById("regPlate").value;
+    }
+
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      alert("Registration successful.");
+      showSection("login");
+    } else {
+      alert(data.error || "Registration failed");
+    }
+  }
+
+  async function loadDrivers() {
+    const token = localStorage.getItem("token");
+    const res = await fetch("http://localhost:3000/drivers", {
+      headers: { "Authorization": "Bearer " + token }
+    });
+
+    const data = await res.json();
+    const select = document.getElementById("driverSelect");
+
+    select.innerHTML = '<option value="">Select Driver</option>';
+    if (Array.isArray(data)) {
+      data.forEach(driver => {
+        if (driver._id && driver.name) {
+          const option = document.createElement("option");
+          option.value = driver._id;
+          option.textContent = driver.name;
+          select.appendChild(option);
+        }
+      });
+    } else {
+      select.innerHTML = '<option value="">No drivers found</option>';
+    }
+
+    if (id === "customer") loadDrivers();
+  }
+
+  async function createRide(e) {
+  e.preventDefault();
+  const token = localStorage.getItem("token");
+  const pickup = document.getElementById("pickup").value.trim();
+  const destination = document.getElementById("destination").value.trim();
+  const driver = document.getElementById("driverSelect").value;
+  const passenger = JSON.parse(atob(token.split('.')[1])).userId;
+
+  if (!pickup || !destination || !driver) {
+    alert("Please fill all fields.");
+    return;
+  }
+
+  // Show loading indicator
+  const loadingDiv = document.getElementById("rideLoading");
+  loadingDiv.style.display = "block";
+
+  // Fake delay (3 seconds)
+  await new Promise(resolve => setTimeout(resolve, 3000));
+
+  const res = await fetch("http://localhost:3000/rides", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+    body: JSON.stringify({ pickup, destination, status: "requested", passenger, driver })
+  });
+
+  const data = await res.json();
+
+  loadingDiv.style.display = "none"; // Hide after done
+
+  if (res.ok) {
+    alert("🚖 Ride booked successfully!");
+    fetchRides();
+    showSection("rides"); // Optional: redirect to "My Rides"
+  } else {
+    alert(data.error || "Ride booking failed.");
+  }
+}
+
+  async function acceptRide(id) {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(`http://localhost:3000/rides/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify({ status: "completed" }) // set to "completed" to make driver available again and update earnings
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      alert("Ride completed successfully!");
+      fetchRides();
+    } else {
+      alert(data.error || "Error updating ride");
+    }
+  }
+
+
+  async function fetchRides() {
+    const token = localStorage.getItem("token");
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    userRole = payload.role;
+
+    let endpoint = "http://localhost:3000/rides";
+
+    if (userRole === "admin") {
+      endpoint = "http://localhost:3000/admin/rides"; // if you implement admin view separately
+    }
+
+    const res = await fetch(endpoint, {
+      headers: { "Authorization": "Bearer " + token }
+    });
+
+    const rideDiv = document.getElementById("rideResults");
+    const data = await res.json();
+
+    if (res.ok) {
+      rideDiv.innerHTML = data.map(r => `
+  <hr>
+  <p><strong>From:</strong> ${r.pickup}</p>
+  <p><strong>To:</strong> ${r.destination}</p>
+  <p><strong>Status:</strong> ${r.status}</p>
+  ${r.driverVehicle ? `<p><strong>Vehicle:</strong> ${r.driverVehicle}</p>` : ""}
+  ${r.driverPlate ? `<p><strong>Plate:</strong> ${r.driverPlate}</p>` : ""}
+  ${userRole === 'driver' && r.status === 'requested' ? `
+    <button onclick="acceptRide('${r._id}')">Complete Ride</button>
+  ` : ''}
+`).join('');
+
+    } else {
+      rideDiv.innerHTML = "Error loading rides.";
+    }
+  }
+
+  async function fetchDriverEarnings() {
+  const token = localStorage.getItem("token");
+  const payload = JSON.parse(atob(token.split('.')[1]));
+  const driverId = payload.userId;
+
+  const res = await fetch("http://localhost:3000/rides", {
+    headers: { "Authorization": "Bearer " + token }
+  });
+
+  const container = document.getElementById("earningsList");
+
+  if (!res.ok) {
+    container.innerHTML = `<p style="color:red;">Failed to fetch rides.</p>`;
+    return;
+  }
+
+  const rides = await res.json();
+
+  const completedRides = rides.filter(r => r.status === "completed");
+  let totalEarnings = 0;
+
+  const rideListHTML = completedRides.map(r => {
+    totalEarnings += r.fare || 0;
+    return `
+      <hr>
+      <p><strong>From:</strong> ${r.pickup}</p>
+      <p><strong>To:</strong> ${r.destination}</p>
+      <p><strong>Fare:</strong> RM ${r.fare}</p>
+      <p><strong>Status:</strong> ${r.status}</p>
+    `;
+  }).join('');
+
+  container.innerHTML = `
+    ${rideListHTML || "<p>No completed rides yet.</p>"}
+    <hr>
+    <h3>💰 Total Earnings: RM ${totalEarnings}</h3>
+  `;
+}
+
+  async function fetchAnalytics() {
+  document.getElementById("adminMainMenu").classList.add("hidden");
+  document.getElementById("deleteCustomerSection").classList.add("hidden");
+  document.getElementById("analyticsSection").classList.remove("hidden");
+
+    const token = localStorage.getItem("token");
+
+    const res = await fetch("http://localhost:3000/admin/analytics", {
+      headers: { "Authorization": "Bearer " + token }
+    });
+
+    const data = await res.json();
+    const outputDiv = document.getElementById("analyticsResult");
+
+    if (res.ok) {
+      const customers = data.allCustomers.map(c => `
+        <li><strong>${c.name}</strong> (${c.email})</li>
+      `).join('');
+
+      const drivers = data.allDrivers.map(d => `
+        <li><strong>${d.name}</strong> (${d.email}) - ${d.vehicle} [${d.licensePlate}] - Status: ${d.status} - Earnings: RM ${d.earnings}</li>
+      `).join('');
+
+      const rides = data.allRides.map(r => `
+        <li>From <strong>${r.pickup}</strong> to <strong>${r.destination}</strong>, Status: ${r.status}, Fare: RM ${r.fare}</li>
+      `).join('');
+
+      outputDiv.innerHTML = `
+        <h3>📋 Total Stats:</h3>
+        <p>Customers: ${data.totalCustomers}</p>
+        <p>Drivers: ${data.totalDrivers}</p>
+        <p>Rides: ${data.totalRides}</p>
+
+        <h3>👤 Customers</h3>
+        <ul>${customers}</ul>
+
+        <h3>🚖 Drivers</h3>
+        <ul>${drivers}</ul>
+
+        <h3>🚕 Rides</h3>
+        <ul>${rides}</ul>
+      `;
+    } else {
+      outputDiv.innerHTML = `<p style="color:red;">${data.error || "Failed to fetch analytics"}</p>`;
+    }
+  }
+
+  async function deleteCustomer() {
+    const token = localStorage.getItem("token");
+    const id = document.getElementById("deleteCustomerId").value.trim();
+
+    if (!id) {
+      alert("Please enter a customer ID.");
+      return;
+    }
+
+    const res = await fetch(`http://localhost:3000/admin/customers/${id}`, {
+      method: "DELETE",
+      headers: { "Authorization": "Bearer " + token }
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      alert("Customer deleted successfully.");
+      document.getElementById("deleteCustomerId").value = "";
+      fetchAnalytics(); // Refresh analytics if needed
+    } else {
+      alert(data.error || "Failed to delete customer.");
+    }
+  }
+
+  </script>
+
+  <footer class="affiliate-bar">
+  Associated with 
+  <img src="https://en.your-uni.com/assets/images/university/utem-university.webp" alt="UTeM Logo">
+</footer>
+
+  </body>
+  </html>

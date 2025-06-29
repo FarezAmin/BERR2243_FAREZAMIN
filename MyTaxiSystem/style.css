@@ -1,0 +1,11 @@
+.image-text {
+  font-size: 100px;
+  font-weight: bold;
+  background: url('https://www.goteso.com/products/assets/images/clone-scripts/mytaxi/mytaxi-right-header.png') no-repeat center center;
+  background-size: cover;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-align: center;
+  margin-top: 100px;
+}
